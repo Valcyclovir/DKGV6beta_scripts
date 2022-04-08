@@ -9,7 +9,7 @@ NC='\033[0m' # No Color
 BOLD='\e[1m'
 UNBOLD='\e[0m'
 
-CURRENT_VERSION="6.0.0-beta.1.34"
+CURRENT_VERSION=6.0.0-beta.1.34
 OTNODE_DIR="/root/ot-node"
 GRAPHDB_FILE=$(ls /root/graphdb*.zip)
 GRAPHDB_DIR=$(echo $GRAPHDB_FILE | sed 's|-dist.zip||')
