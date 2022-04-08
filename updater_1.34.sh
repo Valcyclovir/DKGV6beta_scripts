@@ -37,11 +37,11 @@ perform_step() {
 }
 
 aliases() {
-  echo "alias otnode-stop='systemctl stop otnode.service'
-  alias otnode-start='systemctl start otnode.service'
-  alias otnode-logs='journalctl -u otnode --output cat -f'
-  alias otnode-config='nano /root/ot-node/.origintrail_noderc'
-" >> $BASHRC_FILE
+  echo "alias otnode-stop='systemctl stop otnode.service'" >> $BASHRC_FILE
+  echo "alias otnode-start='systemctl start otnode.service'" >> $BASHRC_FILE
+  echo "alias otnode-restart='systemctl restart otnode.service'" >> $BASHRC_FILE
+  echo "alias otnode-logs='journalctl -u otnode --output cat -f'" >> $BASHRC_FILE
+  echo "alias otnode-config='nano /root/ot-node/.origintrail_noderc'" >> $BASHRC_FILE
 } 
 
 clear
