@@ -46,8 +46,8 @@ if [[ -f $BASHRC_FILE ]];then
   perform_step "echo "alias otnode-stop='systemctl stop otnode.service'
   alias otnode-start='systemctl start otnode.service'
   alias otnode-logs='journalctl -u otnode --output cat -f'
-  alias otnode-config='nano ~/ot-node/.origintrail_noderc'" >> /root/.bashrc" "Implementing OriginTrail aliases to .bashrc file"
-  perform_step "source /root/.bashrc" "Sourcing bashrc file"
+  alias otnode-config='nano ~/ot-node/.origintrail_noderc'" >> $BASHRC_FILE" "Implementing OriginTrail aliases to .bashrc file"
+  perform_step "source $BASHRC_FILE" "Sourcing bashrc file"
 fi
 
 if [[ $GRAPHDB_DIR != "" ]];then
