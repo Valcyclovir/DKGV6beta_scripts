@@ -14,6 +14,7 @@ OTNODE_DIR="/root/ot-node"
 GRAPHDB_FILE=$(ls /root/graphdb*.zip)
 GRAPHDB_DIR=$(echo $GRAPHDB_FILE | sed 's|-dist.zip||')
 BLAZEGRAPH_FILE=$(ls /root/blazegraph.jar)
+BASHRC_FILE=/root/.bashrc
 
 echo_color() {
   echo -e "$1$2$NC"
@@ -41,12 +42,13 @@ cd /root
 
 echo_header "OriginTrail v$CURRENT_VERSION update for current nodes"
 
-perform_step "echo "alias otnode-stop='systemctl stop otnode.service'
-alias otnode-start='systemctl start otnode.service'
-alias otnode-logs='journalctl -u otnode --output cat -f'
-alias otnode-config='nano ~/ot-node/.origintrail_noderc'" >> /root/.bashrc" "Implementing OriginTrail aliases to .bashrc file"
-
-perform_step "source /root/.bashrc" "Sourcing bashrc file"
+if [[ -f $BASHRC_FILE ]];then
+  perform_step "echo "alias otnode-stop='systemctl stop otnode.service'
+  alias otnode-start='systemctl start otnode.service'
+  alias otnode-logs='journalctl -u otnode --output cat -f'
+  alias otnode-config='nano ~/ot-node/.origintrail_noderc'" >> /root/.bashrc" "Implementing OriginTrail aliases to .bashrc file"
+  perform_step "source /root/.bashrc" "Sourcing bashrc file"
+fi
 
 if [[ $GRAPHDB_DIR != "" ]];then
     echo_header "Removing GraphDB and Installing Blazegraph"
