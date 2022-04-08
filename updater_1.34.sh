@@ -35,7 +35,9 @@ perform_step() {
   fi
 }
 
-clear 
+clear
+
+cd /root
 
 echo_header "OriginTrail v$CURRENT_VERSION update for current nodes"
 
