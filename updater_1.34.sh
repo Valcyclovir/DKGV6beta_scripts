@@ -40,7 +40,8 @@ aliases() {
   echo "alias otnode-stop='systemctl stop otnode.service'
   alias otnode-start='systemctl start otnode.service'
   alias otnode-logs='journalctl -u otnode --output cat -f'
-  alias otnode-config='nano ~/ot-node/.origintrail_noderc'" >> $BASHRC_FILE
+  alias otnode-config='nano ~/ot-node/.origintrail_noderc'
+" >> $BASHRC_FILE
 } 
 
 clear
