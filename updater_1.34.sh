@@ -79,7 +79,7 @@ if [[ ! -f $BLAZEGRAPH_FILE ]]; then
     perform_step "systemctl start otnode" "Starting otnode"
 fi
 
-OUTPUT=$(curl -s --location --request GET '0.0.0.0:8900/info' | jq -r '.version' 2>&1)
+OUTPUT=$(curl -s --location --request GET '0.0.0.0:8900/info' | jq -r '.version')
 if [[ $CURRENT_VERSION == $OUTPUT ]]; then
     echo_color $GREEN "Node successfully updated to v$CURRENT_VERSION"
 else
