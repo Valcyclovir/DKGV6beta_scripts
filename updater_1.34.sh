@@ -68,6 +68,7 @@ if [[ $GRAPHDB_DIR != "" ]];then
   perform_step "systemctl disable graphdb.service" "Disabling graphdb"
   perform_step "rm /lib/systemd/system/graphdb.service" "Removing graphdb service file"
   perform_step "systemctl daemon-reload" "Reloading system daemon"
+  perform_step "rm -rf $GRAPHDB_DIR" "Removing $GRAPHDB_DIR"
 fi
 
 if [[ -f $GRAPHDB_FILE ]]; then
