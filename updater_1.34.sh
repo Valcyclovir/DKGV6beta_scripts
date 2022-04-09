@@ -37,6 +37,8 @@ perform_step() {
 }
 
 aliases() {
+  echo "" >> $BASHRC_FILE
+  echo "# OriginTrail node aliases" >> $BASHRC_FILE
   echo "alias otnode-stop='systemctl stop otnode.service'" >> $BASHRC_FILE
   echo "alias otnode-start='systemctl start otnode.service'" >> $BASHRC_FILE
   echo "alias otnode-restart='systemctl restart otnode.service'" >> $BASHRC_FILE
@@ -91,4 +93,13 @@ if [[ $CURRENT_VERSION == $OUTPUT ]]; then
     echo_color $GREEN "Node successfully updated to v$CURRENT_VERSION"
 else
     echo_color $RED "Node version is $OUTPUT and latest version is $CURRENT_VERSION. Please make sure your node is updated to latest version."
+fi
+
+if [[ -f $BASHRC_FILE ]];then
+  echo_header "You can now use the following aliases (shortcuts) to quickly manage your OriginTrail node."
+  echo_color $GREEN "otnode-stop"
+  echo_color $GREEN "otnode-start"
+  echo_color $GREEN "otnode-restart"
+  echo_color $GREEN "otnode-logs"
+  echo_color $GREEN "otnode-config"
 fi
