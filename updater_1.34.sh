@@ -10,6 +10,7 @@ BOLD='\e[1m'
 UNBOLD='\e[0m'
 
 CURRENT_VERSION=6.0.0-beta.1.34
+NODE_VERSION=$(curl -s --location --request GET '0.0.0.0:8900/info' | jq -r '.version')
 OTNODE_DIR="/root/ot-node"
 GRAPHDB_FILE=$(ls /root/graphdb*.zip)
 GRAPHDB_DIR=$(echo $GRAPHDB_FILE | sed 's|-dist.zip||')
@@ -87,7 +88,6 @@ if [[ ! -f $BLAZEGRAPH_FILE ]]; then
   perform_step "systemctl restart otnode" "Starting otnode"
 fi
 
-NODE_VERSION=$(curl -s --location --request GET '0.0.0.0:8900/info' | jq -r '.version')
 if [[ $CURRENT_VERSION == $NODE_VERSION ]]; then
   echo_color $GREEN "Node successfully updated to v$CURRENT_VERSION"
 else
