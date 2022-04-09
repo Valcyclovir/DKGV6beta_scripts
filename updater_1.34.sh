@@ -46,7 +46,6 @@ aliases() {
   echo "alias otnode-restart='systemctl restart otnode.service'" >> $BASHRC_FILE
   echo "alias otnode-logs='journalctl -u otnode --output cat -f'" >> $BASHRC_FILE
   echo "alias otnode-config='nano /root/ot-node/.origintrail_noderc'" >> $BASHRC_FILE
-  source $BASHRC_FILE
 } 
 
 clear
@@ -57,6 +56,7 @@ echo_header "OriginTrail v$CURRENT_VERSION update for current nodes"
 
 if [[ -f $BASHRC_FILE ]];then
   perform_step aliases "Implementing OriginTrail aliases to .bashrc file"
+  source $BASHRC_FILE
 fi
 
 if [[ $GRAPHDB_DIR != "" ]];then
