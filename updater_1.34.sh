@@ -58,15 +58,15 @@ if [[ -f $BASHRC_FILE ]];then
 fi
 
 if [[ $GRAPHDB_DIR != "" ]];then
-    echo_header "Removing GraphDB and Installing Blazegraph"
-    systemctl stop otnode
-    IS_RUNNING=$(systemctl show -p ActiveState --value graphdb)
-    if [[ $IS_RUNNING == "active" ]]; then
-        perform_step "systemctl stop graphdb" "Stopping graphdb"
-        perform_step "systemctl disable graphdb.service" "Disabling graphdb"
-        perform_step "systemctl disable graphdb.service" "Removing graphdb service file"
-        perform_step "systemctl daemon-reload" "Reloading system daemon"
-    fi
+  echo_header "Removing GraphDB and Installing Blazegraph"
+  systemctl stop otnode
+  IS_RUNNING=$(systemctl show -p ActiveState --value graphdb)
+  if [[ $IS_RUNNING == "active" ]]; then
+    perform_step "systemctl stop graphdb" "Stopping graphdb"
+  fi
+  perform_step "systemctl disable graphdb.service" "Disabling graphdb"
+  perform_step "rm /lib/systemd/system/graphdb.service" "Removing graphdb service file"
+  perform_step "systemctl daemon-reload" "Reloading system daemon"
 fi
 
 if [[ -f $GRAPHDB_FILE ]]; then
@@ -74,25 +74,24 @@ if [[ -f $GRAPHDB_FILE ]]; then
 fi
 
 if [[ ! -f $BLAZEGRAPH_FILE ]]; then
-    cd /root
-    perform_step "wget https://github.com/blazegraph/database/releases/latest/download/blazegraph.jar" "Downloading Blazegraph"
-    perform_step "cp /root/ot-node/installer/data/blazegraph.service /lib/systemd/system/" "Adding Blazegraph service file"
-    perform_step "systemctl daemon-reload" "Reloading system daemon"
-    perform_step "systemctl enable blazegraph" "Enabling Blazegraph"
-    perform_step "systemctl start blazegraph" "Starting Blazegraph service"
-    IMPLEMENTATION="cat $OTNODE_DIR/.origintrail_noderc | jq -r '.graphDatabase .implementation'"
-    if [[ $IMPLEMENTATION != Blazegraph ]]; then
-        perform_step "jq '.graphDatabase |= {"implementation": "Blazegraph", "url": "http://localhost:9999/blazegraph"} + .' $OTNODE_DIR/.origintrail_noderc >> $OTNODE_DIR/origintrail_noderc_temp"
-        mv $OTNODE_DIR/origintrail_noderc_temp $OTNODE_DIR/.origintrail_noderc
-    fi
-    perform_step "systemctl start otnode" "Starting otnode"
+  perform_step "wget https://github.com/blazegraph/database/releases/latest/download/blazegraph.jar" "Downloading Blazegraph"
+  perform_step "cp /root/ot-node/installer/data/blazegraph.service /lib/systemd/system/" "Adding Blazegraph service file"
+  perform_step "systemctl daemon-reload" "Reloading system daemon"
+  perform_step "systemctl enable blazegraph" "Enabling Blazegraph"
+  perform_step "systemctl restart blazegraph" "Starting Blazegraph service"
+  IMPLEMENTATION="cat $OTNODE_DIR/.origintrail_noderc | jq -r '.graphDatabase .implementation'"
+  if [[ $IMPLEMENTATION != Blazegraph ]]; then
+    perform_step "jq '.graphDatabase |= {"implementation": "Blazegraph", "url": "http://localhost:9999/blazegraph"} + .' $OTNODE_DIR/.origintrail_noderc >> $OTNODE_DIR/origintrail_noderc_temp"
+    mv $OTNODE_DIR/origintrail_noderc_temp $OTNODE_DIR/.origintrail_noderc
+  fi
+  perform_step "systemctl restart otnode" "Starting otnode"
 fi
 
-OUTPUT=$(curl -s --location --request GET '0.0.0.0:8900/info' | jq -r '.version')
-if [[ $CURRENT_VERSION == $OUTPUT ]]; then
-    echo_color $GREEN "Node successfully updated to v$CURRENT_VERSION"
+NODE_VERSION=$(curl -s --location --request GET '0.0.0.0:8900/info' | jq -r '.version')
+if [[ $CURRENT_VERSION == $NODE_VERSION ]]; then
+  echo_color $GREEN "Node successfully updated to v$CURRENT_VERSION"
 else
-    echo_color $RED "Node version is $OUTPUT and latest version is $CURRENT_VERSION. Please make sure your node is updated to latest version."
+  echo_color $RED "Node version is $NODE_VERSION and latest version is $CURRENT_VERSION. Please make sure your node is updated to latest version."
 fi
 
 if [[ -f $BASHRC_FILE ]];then
