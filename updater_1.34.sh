@@ -90,10 +90,9 @@ fi
 IMPLEMENTATION="cat $OTNODE_DIR/.origintrail_noderc | jq -r '.graphDatabase .implementation'"
 if [[ $IMPLEMENTATION != Blazegraph ]]; then
   echo -n "Adding Blazegraph implementation to config file: "
-  OUTPUT="jq '.graphDatabase |= {"implementation": "Blazegraph", "url": "http://localhost:9999/blazegraph"} + .' $OTNODE_DIR/.origintrail_noderc >> $OTNODE_DIR/origintrail_noderc_temp"
+  jq '.graphDatabase |= {"implementation": "Blazegraph", "url": "http://localhost:9999/blazegraph"} + .' $OTNODE_DIR/.origintrail_noderc >> $OTNODE_DIR/origintrail_noderc_temp
   if [[ $? -ne 0 ]]; then
   echo_color $RED "FAILED"
-  echo -e "${N1}Step failed. Output of error is:${N1}${N1}$OUTPUT"
   return 0
   else
   echo_color $GREEN "OK"
