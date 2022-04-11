@@ -86,7 +86,15 @@ if [[ ! -f $BLAZEGRAPH_FILE ]]; then
   fi
   IMPLEMENTATION="cat $OTNODE_DIR/.origintrail_noderc | jq -r '.graphDatabase .implementation'"
   if [[ $IMPLEMENTATION != Blazegraph ]]; then
-    perform_step "jq '.graphDatabase |= {"implementation": "Blazegraph", "url": "http://localhost:9999/blazegraph"} + .' $OTNODE_DIR/.origintrail_noderc >> $OTNODE_DIR/origintrail_noderc_temp"
+    echo -n "Adding Blazegraph implementation to config file: "
+    OUTPUT="jq '.graphDatabase |= {"implementation": "Blazegraph", "url": "http://localhost:9999/blazegraph"} + .' $OTNODE_DIR/.origintrail_noderc >> $OTNODE_DIR/origintrail_noderc_temp"
+    if [[ $? -ne 0 ]]; then
+    echo_color $RED "FAILED"
+    echo -e "${N1}Step failed. Output of error is:${N1}${N1}$OUTPUT"
+    return 0
+    else
+    echo_color $GREEN "OK"
+    fi
     mv $OTNODE_DIR/origintrail_noderc_temp $OTNODE_DIR/.origintrail_noderc
   fi
   perform_step "systemctl restart otnode" "Starting otnode"
