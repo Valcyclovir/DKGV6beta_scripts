@@ -78,27 +78,31 @@ fi
 
 if [[ ! -f $BLAZEGRAPH_FILE ]]; then
   perform_step "wget https://github.com/blazegraph/database/releases/latest/download/blazegraph.jar" "Downloading Blazegraph"
-  if [[ ! -f $BLAZEGRAPH_JNL ]]; then
-    perform_step "cp /root/ot-node/installer/data/blazegraph.service /lib/systemd/system/" "Adding Blazegraph service file"
-    perform_step "systemctl daemon-reload" "Reloading system daemon"
-    perform_step "systemctl enable blazegraph" "Enabling Blazegraph"
-    perform_step "systemctl restart blazegraph" "Starting Blazegraph service"
-  fi
-  IMPLEMENTATION="cat $OTNODE_DIR/.origintrail_noderc | jq -r '.graphDatabase .implementation'"
-  if [[ $IMPLEMENTATION != Blazegraph ]]; then
-    echo -n "Adding Blazegraph implementation to config file: "
-    OUTPUT="jq '.graphDatabase |= {"implementation": "Blazegraph", "url": "http://localhost:9999/blazegraph"} + .' $OTNODE_DIR/.origintrail_noderc >> $OTNODE_DIR/origintrail_noderc_temp"
-    if [[ $? -ne 0 ]]; then
-    echo_color $RED "FAILED"
-    echo -e "${N1}Step failed. Output of error is:${N1}${N1}$OUTPUT"
-    return 0
-    else
-    echo_color $GREEN "OK"
-    fi
-    mv $OTNODE_DIR/origintrail_noderc_temp $OTNODE_DIR/.origintrail_noderc
-  fi
-  perform_step "systemctl restart otnode" "Starting otnode"
 fi
+
+if [[ ! -f $BLAZEGRAPH_JNL ]]; then
+  perform_step "cp /root/ot-node/installer/data/blazegraph.service /lib/systemd/system/" "Adding Blazegraph service file"
+  perform_step "systemctl daemon-reload" "Reloading system daemon"
+  perform_step "systemctl enable blazegraph" "Enabling Blazegraph"
+  perform_step "systemctl restart blazegraph" "Starting Blazegraph service"
+fi
+
+IMPLEMENTATION="cat $OTNODE_DIR/.origintrail_noderc | jq -r '.graphDatabase .implementation'"
+if [[ $IMPLEMENTATION != Blazegraph ]]; then
+  echo -n "Adding Blazegraph implementation to config file: "
+  OUTPUT="jq '.graphDatabase |= {"implementation": "Blazegraph", "url": "http://localhost:9999/blazegraph"} + .' $OTNODE_DIR/.origintrail_noderc >> $OTNODE_DIR/origintrail_noderc_temp"
+  if [[ $? -ne 0 ]]; then
+  echo_color $RED "FAILED"
+  echo -e "${N1}Step failed. Output of error is:${N1}${N1}$OUTPUT"
+  return 0
+  else
+  echo_color $GREEN "OK"
+  fi
+  mv $OTNODE_DIR/origintrail_noderc_temp $OTNODE_DIR/.origintrail_noderc
+fi
+
+perform_step "systemctl restart otnode" "Starting otnode"
+
 
 if [[ $CURRENT_VERSION == $NODE_VERSION ]]; then
   echo_color $GREEN "Node successfully updated to v$CURRENT_VERSION"
