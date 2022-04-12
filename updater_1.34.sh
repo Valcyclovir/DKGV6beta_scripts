@@ -80,12 +80,10 @@ if [[ ! -f $BLAZEGRAPH_FILE ]]; then
   perform_step "wget https://github.com/blazegraph/database/releases/latest/download/blazegraph.jar" "Downloading Blazegraph"
 fi
 
-if [[ ! -f $BLAZEGRAPH_JNL ]]; then
-  perform_step "cp /root/ot-node/installer/data/blazegraph.service /lib/systemd/system/" "Adding Blazegraph service file"
-  perform_step "systemctl daemon-reload" "Reloading system daemon"
-  perform_step "systemctl enable blazegraph" "Enabling Blazegraph"
-  perform_step "systemctl restart blazegraph" "Starting Blazegraph service"
-fi
+perform_step "cp /root/ot-node/installer/data/blazegraph.service /lib/systemd/system/" "Adding Blazegraph service file"
+perform_step "systemctl daemon-reload" "Reloading system daemon"
+perform_step "systemctl enable blazegraph" "Enabling Blazegraph"
+perform_step "systemctl restart blazegraph" "Starting Blazegraph service"
 
 IMPLEMENTATION="cat $OTNODE_DIR/.origintrail_noderc | jq -r '.graphDatabase .implementation'"
 if [[ $IMPLEMENTATION != Blazegraph ]]; then
